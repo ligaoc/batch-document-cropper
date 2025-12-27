@@ -2,9 +2,13 @@
 """PyInstaller 打包配置"""
 
 import sys
+import os
 from PyInstaller.utils.hooks import collect_data_files, collect_submodules
 
 block_cipher = None
+
+# 获取项目根目录
+ROOT_DIR = os.path.dirname(os.path.abspath(SPEC))
 
 # 收集 PyMuPDF 数据文件
 datas = collect_data_files('fitz')
@@ -15,11 +19,29 @@ hiddenimports = collect_submodules('fitz') + [
     'PyQt5.QtCore',
     'PyQt5.QtGui',
     'PyQt5.QtWidgets',
+    'src',
+    'src.gui',
+    'src.gui.main_window',
+    'src.gui.file_list_widget',
+    'src.gui.margin_panel',
+    'src.gui.preview_widget',
+    'src.gui.progress_widget',
+    'src.core',
+    'src.core.batch_processor',
+    'src.core.document_converter',
+    'src.core.docx_cropper',
+    'src.core.file_validator',
+    'src.core.output_manager',
+    'src.core.pdf_cropper',
+    'src.core.resolution_keeper',
+    'src.models',
+    'src.models.margin_settings',
+    'src.models.task',
 ]
 
 a = Analysis(
-    ['src/main.py'],
-    pathex=[],
+    ['run.py'],
+    pathex=[ROOT_DIR],
     binaries=[],
     datas=datas,
     hiddenimports=hiddenimports,

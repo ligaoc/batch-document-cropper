@@ -14,21 +14,27 @@
 ## 系统要求
 
 - Python 3.9+
-- LibreOffice (用于 DOC/DOCX 转换)
+- WPS Office (用于 DOC/DOCX 转 PDF)
 - Windows 操作系统
 
 ## 安装
 
-1. 安装依赖:
+### 1. 安装 Python 依赖
 
 ```bash
 pip install -r requirements.txt
 ```
 
-2. 安装 LibreOffice (用于 Word 文档转换):
-   - 下载地址: https://www.libreoffice.org/download/download/
+### 2. 安装 WPS Office
+
+WPS Office 用于 Word 文档 (DOC/DOCX) 转换为 PDF。
+
+- 下载地址: https://www.wps.cn/
+- 安装后无需额外配置，程序会自动调用 WPS 进行转换
 
 ## 运行
+
+### 开发环境运行
 
 ```bash
 python run.py
@@ -36,11 +42,41 @@ python run.py
 
 ## 打包为 EXE
 
+### 打包步骤
+
+1. 确保已安装 PyInstaller:
+
 ```bash
-pyinstaller build.spec
+pip install pyinstaller
 ```
 
-打包后的 EXE 文件位于 `dist/BatchDocumentCropper.exe`
+2. 执行打包命令:
+
+```bash
+python -m PyInstaller build.spec --clean
+```
+
+3. 打包完成后，EXE 文件位于 `dist/BatchDocumentCropper.exe`
+
+### 打包说明
+
+- `--clean` 参数会清除之前的缓存，确保使用最新配置
+- 打包后的 EXE 是单文件模式，可独立运行
+- 运行 EXE 的电脑也需要安装 WPS Office 才能处理 Word 文档
+
+## 部署
+
+### 直接运行 EXE
+
+1. 将 `dist/BatchDocumentCropper.exe` 复制到目标电脑
+2. 确保目标电脑已安装 WPS Office
+3. 双击运行即可
+
+### 注意事项
+
+- 首次运行可能需要几秒钟加载时间
+- 如果杀毒软件误报，请添加信任
+- 处理大文件时请耐心等待
 
 ## 使用说明
 
@@ -57,6 +93,7 @@ pyinstaller build.spec
 │   ├── core/           # 核心处理模块
 │   │   ├── batch_processor.py
 │   │   ├── document_converter.py
+│   │   ├── docx_cropper.py
 │   │   ├── file_validator.py
 │   │   ├── output_manager.py
 │   │   ├── pdf_cropper.py
@@ -73,10 +110,21 @@ pyinstaller build.spec
 │   ├── exceptions.py   # 自定义异常
 │   └── main.py         # 应用入口
 ├── tests/              # 测试
-├── build.spec          # PyInstaller 配置
-├── requirements.txt    # 依赖
+├── build.spec          # PyInstaller 打包配置
+├── requirements.txt    # Python 依赖
 └── run.py              # 启动脚本
 ```
+
+## 常见问题
+
+### Q: 打包后运行报错 "pyinstaller 不是内部或外部命令"
+A: 使用 `python -m PyInstaller build.spec` 代替直接运行 `pyinstaller`
+
+### Q: Word 文档无法转换
+A: 请确保已安装 WPS Office，并且 WPS 可以正常打开该文档
+
+### Q: EXE 运行时闪退
+A: 可以在命令行中运行 EXE 查看错误信息，或将 `build.spec` 中的 `console=False` 改为 `console=True` 重新打包
 
 ## 许可证
 

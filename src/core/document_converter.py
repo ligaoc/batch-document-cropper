@@ -80,6 +80,12 @@ class DocumentConverter:
         logger.info(f"优先使用 Word: {self._prefer_word}")
         logger.info(f"当前转换器: {self.converter_name}")
         print(f"[转换器] 初始化完成，使用: {self.converter_name}")
+        
+        # 如果配置为使用 Word 但 Word 不可用，直接报错
+        if self._prefer_word and not self._word_available:
+            error_msg = "Microsoft Word 未安装或不可用，请安装 Microsoft Office 后重试"
+            logger.error(error_msg)
+            raise RuntimeError(error_msg)
     
     def _check_word_available(self) -> bool:
         """检查 Microsoft Word 是否可用（使用缓存避免重复检测）"""
@@ -309,11 +315,6 @@ class DocumentConverter:
                 logger.info(f"PDF 文件已生成，忽略关闭时的错误")
             else:
                 print(f"[Word] 转换失败: {e}")
-                # 如果 Word 转换失败，尝试回退到 LibreOffice
-                if self._libreoffice_path:
-                    logger.info("回退到 LibreOffice")
-                    print(f"[转换器] 回退到 LibreOffice")
-                    return self._convert_to_pdf_with_libreoffice(input_path, output_dir)
                 raise ConversionError(input_path, f"Word 转换失败: {e}")
         finally:
             # 确保关闭文档和 Word（忽略关闭时的错误）
