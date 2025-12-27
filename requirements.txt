@@ -16,3 +16,5 @@ pytest-qt>=4.0.0
 
 # Packaging
 pyinstaller>=6.0.0
+
+docx2pdf

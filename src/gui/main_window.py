@@ -159,10 +159,10 @@ class MainWindow(QMainWindow):
             self._output_label.setText(f"输出目录: {dir_path}")
     
     def _on_file_selected(self, file_path: str):
-        """文件选择变化"""
+        """文件选择变化 - 不自动加载预览，只通知预览组件"""
         if file_path:
             margins = self._margin_panel.get_margins()
-            self._preview.load_document(file_path, margins)
+            self._preview.on_file_selected(file_path, margins)
     
     def _on_margins_changed(self, margins: MarginSettings):
         """边距变化"""

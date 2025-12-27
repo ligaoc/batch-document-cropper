@@ -10,7 +10,7 @@ from PyQt5.QtCore import QObject, pyqtSignal
 
 from ..models.margin_settings import MarginSettings
 from ..models.task import ProcessingTask, TaskStatus, CropResult, ProcessingSummary
-from .document_converter import DocumentConverter, ConversionError
+from .document_converter import get_document_converter, ConversionError
 from .pdf_cropper import PDFCropper
 from .docx_cropper import DOCXCropper
 from .file_validator import is_pdf, is_docx, is_doc, get_output_extension
@@ -30,8 +30,7 @@ class BatchProcessor(QObject):
     
     处理逻辑:
     - PDF 文件: 使用 PDFCropper 裁剪，输出 PDF
-    - DOCX 文件: 使用 DOCXCropper 裁剪，输出 DOCX
-    - DOC 文件: 先转换为 DOCX，再使用 DOCXCropper 裁剪，输出 DOCX
+    - DOCX/DOC 文件: 转 PDF → 裁剪 → 输出 PDF + DOCX（图片版）
     """
     
     # Qt 信号
@@ -50,7 +49,7 @@ class BatchProcessor(QObject):
         super().__init__()
         self._max_workers = min(max_workers, self.MAX_WORKERS)
         self._tasks: List[BatchTask] = []
-        self._converter = DocumentConverter()
+        self._converter = get_document_converter()
         self._pdf_cropper = PDFCropper()
         self._docx_cropper = DOCXCropper()
         self._cancelled = False
